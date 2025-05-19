@@ -1,0 +1,80 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: TestSelectorActividades
+      id: testselectoractividades
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestSelectorActividades
+        setup-command: ''
+        command: go test ./... -run ^TestSelectorActividades$
+        timeout: 10
+        max-score: 1
+    - name: TestEjercicio2
+      id: testejercicio2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestEjercicio2
+        setup-command: ''
+        command: go test ./... -run ^TestEjercicio2$
+        timeout: 10
+        max-score: 1
+    - name: TestEjercicio3
+      id: testejercicio3
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestEjercicio3
+        setup-command: ''
+        command: go test ./... -run ^TestEjercicio3$
+        timeout: 10
+        max-score: 1
+    - name: TestFarolas
+      id: testfarolas
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestFarolas
+        setup-command: ''
+        command: go test ./... -run ^TestFarolas$
+        timeout: 10
+        max-score: 1
+    - name: TestCambio
+      id: testcambio
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestCambio
+        setup-command: ''
+        command: go test ./... -run ^TestCambio$
+        timeout: 10
+        max-score: 1
+    - name: TestDiapositivas
+      id: testdiapositivas
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestDiapositivas
+        setup-command: ''
+        command: go test ./... -run ^TestDiapositivas$
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTSELECTORACTIVIDADES_RESULTS: ${{steps.testselectoractividades.outputs.result}}
+        TESTEJERCICIO2_RESULTS: ${{steps.testejercicio2.outputs.result}}
+        TESTEJERCICIO3_RESULTS: ${{steps.testejercicio3.outputs.result}}
+        TESTFAROLAS_RESULTS: ${{steps.testfarolas.outputs.result}}
+        TESTCAMBIO_RESULTS: ${{steps.testcambio.outputs.result}}
+        TESTDIAPOSITIVAS_RESULTS: ${{steps.testdiapositivas.outputs.result}}
+      with:
+        runners: testselectoractividades,testejercicio2,testejercicio3,testfarolas,testcambio,testdiapositivas
